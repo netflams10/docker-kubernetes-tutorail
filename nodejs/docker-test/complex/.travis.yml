@@ -1,0 +1,23 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  docker build -t netflams10/react_test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run netflams10/react_test npm run test -- --coverage
+
+after_success:
+  - docker build -t netflams10/multi_client ./client
+  - docker build -t netflams10/multi_nginx ./nginx
+  - docker build -t netflams10/multi_server ./server
+  - docker build -t netflams10/multi_worker ./worker
+
+  # Pushing to docker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push netflams10/multi_client
+  - docker push netflams10/multi_nginx
+  - docker push netflams10/multi_server
+  - docker push netflams10/multi_worker

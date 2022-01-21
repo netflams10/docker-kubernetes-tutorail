@@ -1,0 +1,66 @@
+version: "3"
+
+services: 
+
+  api:
+    container_name: api
+    build:
+      context: .docker/php
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/var/www/html
+    networks: 
+      - app
+
+  web:
+    image: nginx:1.17
+    container_name: web
+    working_dir: /var/www/html
+    volumes: 
+      - ./:/var/www/html
+      - .docker/nginx/nginx_local_template.conf:/etc/nginx/conf.d/default.conf
+    ports: 
+      - "8082:80"
+    networks:
+      - app
+
+    # if you are bootstrapping with ui in laravel
+    # RUN "docker-compose run --rm node npm install"
+    # node:
+    #   image: node:12
+    #   user: node
+    #   working_dir: /assets
+    #   volumes:
+    #     - ./:assets
+    #   command: npm run watch
+    
+  db:
+    image: postgres:10
+    container_name: db
+    environment: 
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_DB: "${DB_DATABASE}"
+    volumes: 
+      - .docker/postgresdata:/var/lib/postgresql/data
+    networks:
+      - app
+
+
+  redis:
+    image: redis:5
+    container_name: redis
+    volumes: 
+      - .docker/redisdata:/data
+    networks:
+      - app
+
+
+volumes:
+  redisdata:
+  postgresdata:
+
+networks: 
+  app:
+    driver: bridge
+
