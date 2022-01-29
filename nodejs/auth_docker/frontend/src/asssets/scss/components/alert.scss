@@ -1,0 +1,33 @@
+.alert {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  margin: 20px;
+  background: yellow;
+  padding: 20px 60px;
+  border-radius: 12px;
+  z-index: 9999;
+}
+
+.alert-content {
+  padding: 10px;
+}
+
+.alert-header {
+  width: 100%;
+  padding: 10px;
+}
+
+.alert-body {
+  width: 100%;
+}
+
+.alert-error {
+  background: $alert-error;
+}
+
+.alert-message {
+  background: $alert-message;
+}

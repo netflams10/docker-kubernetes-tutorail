@@ -1,0 +1,23 @@
+
+
+
+
+
+
+.container {
+  background: red;
+}
+
+.auth-container {
+  border: $deep-debuging 2px solid;
+  padding: 30px;
+  border-radius: 0 0 20px 0;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 2px;
+}

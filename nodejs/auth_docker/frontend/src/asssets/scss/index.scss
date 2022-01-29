@@ -1,0 +1,25 @@
+
+// Variables
+@import "./variables/colors.scss";
+@import "./variables/screens.scss";
+
+
+// App <--> Default css
+@import "./app.scss";
+
+
+// Import Components
+
+// Alert state
+@import "./components/alert.scss";
+@import "./components/spinner.scss";
+
+// Containers
+@import "./components/containers.scss";
+
+// Image
+@import "./components/image";
+
+// Animation
+@import "./components/animation.scss";
+

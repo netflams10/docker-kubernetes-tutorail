@@ -1,0 +1,73 @@
+version: '3'
+
+services:
+  db:
+    container_name: db
+    image: mysql:8
+    volumes:
+      - ./mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    # depends_on:
+    #   - api
+    ports:
+      - "33050:3306"
+    networks:
+      - auth_server
+
+  api:
+    container_name: api
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./backend:/app
+    user: node
+    # depends:
+    #   - db
+    networks:
+      - auth_server
+
+  client:
+    container_name: client
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    environment:
+      - WDS_SOCKET_PORT=0
+    depends_on:
+      - api
+    networks:
+      - auth_server
+
+  web:
+    container_name: web
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3050:80"
+    depends_on:
+      - client
+      - api
+    networks:
+      - auth_server
+
+
+networks:
+  auth_server:
+    driver: bridge
+    
+volumes:
+  mysqldata:
